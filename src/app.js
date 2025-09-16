@@ -1,6 +1,8 @@
 import express from "express"
 import cors from "cors"
-
+import authRoutes from "./routes/auth.routes.js"
+import dotenv from "dotenv"
+dotenv.config()
 const app=express()
 
 export default app
@@ -18,6 +20,11 @@ app.use(cors({
     methods:["GET",'POST','PUT','PATCH','DELETE','OPTIONS'],
     allowedHeaders:['Content-Type','Authorization'],
 }))
+
+// Register routes
+app.use("/api/auth", authRoutes);
+
+
 app.get("/",(req,res)=>{
     res.send("Hello Worold")
 })
