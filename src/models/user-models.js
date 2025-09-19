@@ -5,7 +5,12 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, required: true, unique: true },
     otp: { type: String },              
     otpExpiresAt: { type: Date },      
-    name: { type: String },            
+    name: { type: String },  
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user", 
+    },          
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }

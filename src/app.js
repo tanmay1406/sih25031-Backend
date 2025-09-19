@@ -21,7 +21,7 @@ app.use(cors({
     allowedHeaders:['Content-Type','Authorization'],
 }))
 
-// Register routes
+// register routes
 app.use("/api/auth", authRoutes);
 
 

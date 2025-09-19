@@ -1,5 +1,5 @@
 //BSGB5821LUDCC6BCJFQUAQNW
-
+import jwt from "jsonwebtoken"
 import User from "../models/user-models.js"
 import ApiError from "../utils/ApiError.js"
 import APIResponse from "../utils/APIResponse.js"
@@ -10,7 +10,7 @@ export const sendOtp = async (req, res) => {
   const { phone } = req.body;
   if (!phone) throw new ApiError(400, "Phone number is required")
 
-  // Find or create user
+  // find or create user
   let user = await User.findOne({ phone });
   if (!user) user = await User.create({ phone });
 
@@ -36,11 +36,25 @@ export const verifyOtp = async (req, res) => {
   if (user.otp !== otp) throw new ApiError(400, "Invalid OTP");
   if (user.otpExpiresAt < new Date()) throw new ApiError(400, "OTP expired");
 
-  // OTP is valid → generate token (JWT) if needed
-  // clear OTP
+  // otp is valid then generate token jwt 
+  // clear otp
   user.otp = null;
   user.otpExpiresAt = null;
   await user.save();
 
-  res.status(200).json(new APIResponse(200, { userId: user._id }, "Logged in successfully"));
+  res.status(200).json(
+    new APIResponse(
+      200,
+      {
+        token,
+        user: {
+          id: user._id,
+          phone: user.phone,
+          role: user.role, // important for frontend
+          name: user.name,
+        },
+      },
+      "Logged in successfully"
+    )
+  )
 }
